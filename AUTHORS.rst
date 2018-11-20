@@ -1,5 +1,4 @@
-==========
 Developers
 ==========
 
-* Thomas weiß <"weiss.thomas@lmu.de">
+* Thomas Weiß <"weiss.thomas@lmu.de">

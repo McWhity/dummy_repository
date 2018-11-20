@@ -8,9 +8,10 @@ requirements = [
     'sphinxcontrib-bibtex'
 ]
 
-__version__ = None
-with open('sar_pre_processing/version.py') as f:
-    exec(f.read())
+try:
+    from multiply_forward_operators import __version__ as version
+except ImportError:
+    version = 'unknown'
 
 setup(name='dummy_repository',
       version=__version__,
@@ -18,4 +19,4 @@ setup(name='dummy_repository',
       author='...',
       packages=['dummy_repository'],
       install_requires=requirements
-)
+      )

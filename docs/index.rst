@@ -1,4 +1,3 @@
-==================
 sar-pre-processing
 ==================
 
@@ -14,7 +13,6 @@ sar-pre-processing
     :maxdepth: 2
     :caption: anything else
 
-    License <license>
     Authors <authors>
     Changelog <changes>
 
