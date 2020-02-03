@@ -93,13 +93,11 @@ def insitu(path,path_SM,fields,esus,save_path):
 
     return df_insitu
 
-
-
 # LAI path
-path = '/media/nas_data/2018_MNI_campaign/field_data/field_measurements/MULITPLY/revised/csv'
+path = '/media/nas_data/2018_MNI_campaign/field_data/field_measurements/vegetation/revised/csv'
 
 # SM path
-path_SM = '/media/nas_data/2018_MNI_campaign/field_data/field_measurements/soil_moisture/MNI_2018_test/csv'
+path_SM = '/media/nas_data/2018_MNI_campaign/field_data/field_measurements/soil_moisture/data_revised'
 
 # field names
 fields = ['317', '410', '508', '525']
