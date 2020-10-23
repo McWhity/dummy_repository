@@ -23,33 +23,32 @@ path_SM = '/media/nas_data/2017_MNI_campaign/field_data/field_measurements/soil_
 
 # field names
 fields = ['301', '508', '542', '319', '515']
-fields = ['508']
 
 # ESU names
-esus = ['high', 'low', 'med']
-esus = ['high']
+esus = ['high', 'low', 'med', 'mean']
+
 
 # Save output path
 save_path = '/media/tweiss/Work/z_final_mni_data_2017'
 
 df_LAI = insitu(path,path_SM,fields,esus,save_path)
 #------------------------------------------------------------------------------
-# pixels = '_buffer_30'
-# pixels = '_buffer_50'
-# pixels = '_buffer_100'
-# pixels = ''
-pixel = ['','_buffer_30','_buffer_50','_buffer_100']
+pixel = ['_Field_buffer_30','','_buffer_30','_buffer_50','_buffer_100']
 
 for pixels in pixel:
-
+    print(pixels)
     path_ESU = '/media/tweiss/Work/z_final_mni_data_2017/'
     name_shp = 'ESU'+pixels+'.shp'
     name_ESU = 'ESU'+pixels+'.tif'
 
-    subprocess.call('gdal_rasterize -at -of GTiff -a FID_ -te 697100 5347200 703600 5354600 -tr 10 10 -ot Byte -co \"COMPRESS=DEFLATE\" '+path_ESU+name_shp+' '+path_ESU+name_ESU, shell=True)
+    if pixels == '_Field_buffer_30':
+        subprocess.call('gdal_rasterize -at -of GTiff -a ID -te 697100 5347200 703600 5354600 -tr 10 10 -ot Byte -co \"COMPRESS=DEFLATE\" '+path_ESU+name_shp+' '+path_ESU+name_ESU, shell=True)
+    else:
+        subprocess.call('gdal_rasterize -at -of GTiff -a FID_ -te 697100 5347200 703600 5354600 -tr 10 10 -ot Byte -co \"COMPRESS=DEFLATE\" '+path_ESU+name_shp+' '+path_ESU+name_ESU, shell=True)
 
     path_data = '/media/nas_data/Thomas/S1/processed/MNI_2017_new_final/step3'
-
+    # path_data = '/media/nas_data/Thomas/S1/processed/MNI_2017_new_final/pol_decomp'
+    # processed_sentinel_data = 'norm_multi'
     processed_sentinel_data = 'multi'
 
     df_output = pd.DataFrame(columns=pd.MultiIndex(levels=[[],[]], codes=[[],[]]))
@@ -92,6 +91,17 @@ for pixels in pixel:
                 mask_value = 14
             elif field == '301' and esu == 'low':
                 mask_value = 15
+            elif field == '515' and esu == 'mean':
+                mask_value = 4
+            elif field == '508' and esu == 'mean':
+                mask_value = 27
+            elif field == '542' and esu == 'mean':
+                mask_value = 8
+            elif field == '319' and esu == 'mean':
+                mask_value = 67
+            elif field == '301' and esu == 'mean':
+                mask_value = 87
+
 
             state_mask = state_mask==mask_value
 
@@ -102,6 +112,8 @@ for pixels in pixel:
             LAI2 = []
             Height2 = []
             VWC2 = []
+            VWC_pro = []
+            VWC_pro2 = []
             sigma_sentinel_vv = []
             sigma_sentinel_vh = []
             theta = []
@@ -116,20 +128,26 @@ for pixels in pixel:
                 else:
                     if tim >= df_LAI.index.min() and tim <= df_LAI.index.max():
                         try:
+
                             data = sentinel1_observations.get_band_data(tim, 'vv_' + processed_sentinel_data)
                             data_vh = sentinel1_observations.get_band_data(tim, 'vh_' + processed_sentinel_data)
 
-                            df_add = df_LAI.filter(like=field).filter(like=esu)
+                            if esu == 'mean':
+                                df_add = df_LAI.filter(like=field)
+                                LAI.append(df_add.filter(like='LAI mean HANTS').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
+                                SM.append(df_add.filter(like='SM 5cm').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
+                                Height.append(df_add.filter(like='Height [cm] mean').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
+                                VWC.append(df_add.filter(like='Water content total kg/m2 mean HANTS').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
+                                VWC_pro.append(df_add.filter(like='Water content total [%]').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
 
-                            LAI.append(df_add.filter(like='LAI HANTS').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
-                            SM.append(df_add.filter(like='SM 5cm').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
-                            Height.append(df_add.filter(like='Height [cm]').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
-                            VWC.append(df_add.filter(like='Water content total kg/m2 HANTS').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
+                            else:
+                                df_add = df_LAI.filter(like=field).filter(like=esu)
+                                LAI.append(df_add.filter(like='LAI HANTS').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
+                                SM.append(df_add.filter(like='SM 5cm').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
+                                Height.append(df_add.filter(like='Height [cm]').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
+                                VWC.append(df_add.filter(like='Water content total kg/m2 HANTS').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
+                                VWC_pro.append(df_add.filter(like='Water content total [%]').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
 
-                            df_add2 = df_LAI.filter(like=field)
-                            LAI2.append(df_add2.filter(like='LAI mean HANTS').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
-                            Height2.append(df_add2.filter(like='Height [cm] mean').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
-                            VWC2.append(df_add2.filter(like='Water content total kg/m2 mean HANTS').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
                             print(tim)
 
                             observations = data.observations*1.
@@ -172,22 +190,26 @@ for pixels in pixel:
             df_output[field + '_' + esu, 'Height'] = Height
             df_output[field + '_' + esu, 'VWC'] = VWC
             df_output[field + '_' + esu, 'vh/vv'] = np.array(sigma_sentinel_vh) / np.array(sigma_sentinel_vv)
-        df_output[field + '_mean', 'date'] = dates
-        df_output[field + '_mean', 'LAI'] = LAI2
-        df_output[field + '_mean', 'Height'] = Height2
-        df_output[field + '_mean', 'VWC'] = VWC2
-        SM2 = df_output.filter(like=field).filter(like='SM').mean(axis=1)
-        df_output[field + '_mean', 'SM'] = SM2
-        vv = df_output.filter(like=field).filter(like='sigma_sentinel_vv').mean(axis=1)
-        vh = df_output.filter(like=field).filter(like='sigma_sentinel_vh').mean(axis=1)
-        df_output[field + '_mean', 'sigma_sentinel_vv'] = vv
-        df_output[field + '_mean', 'sigma_sentinel_vh'] = vh
-        df_output[field + '_mean', 'relativeorbit'] = relativeorbit
-        df_output[field + '_mean', 'orbitdirection'] = orbitdirection
-        df_output[field + '_mean', 'satellite'] = satellite
-        theta_mean = df_output.filter(like=field).filter(like='theta').mean(axis=1)
-        df_output[field + '_mean', 'theta'] = theta_mean
+            df_output[field + '_' + esu, 'watercontentpro'] = VWC_pro
 
-    df_output.to_csv(os.path.join(save_path, 'in_situ_s1'+pixels+'.csv'), encoding='utf-8', sep=',', float_format='%.4f')
+
+        # df_output[field + '_mean', 'date'] = dates
+        # df_output[field + '_mean', 'LAI'] = LAI2
+        # df_output[field + '_mean', 'Height'] = Height2
+        # df_output[field + '_mean', 'VWC'] = VWC2
+        # df_output[field + '_mean', 'watercontentpro'] = VWC_pro2
+        # SM2 = df_output.filter(like=field).filter(like='SM').mean(axis=1)
+        # df_output[field + '_mean', 'SM'] = SM2
+        # vv = df_output.filter(like=field).filter(like='sigma_sentinel_vv').mean(axis=1)
+        # vh = df_output.filter(like=field).filter(like='sigma_sentinel_vh').mean(axis=1)
+        # df_output[field + '_mean', 'sigma_sentinel_vv'] = vv
+        # df_output[field + '_mean', 'sigma_sentinel_vh'] = vh
+        # df_output[field + '_mean', 'relativeorbit'] = relativeorbit
+        # df_output[field + '_mean', 'orbitdirection'] = orbitdirection
+        # df_output[field + '_mean', 'satellite'] = satellite
+        # theta_mean = df_output.filter(like=field).filter(like='theta').mean(axis=1)
+        # df_output[field + '_mean', 'theta'] = theta_mean
+
+    df_output.to_csv(os.path.join(save_path, 'new_in_situ_s1'+pixels+'.csv'), encoding='utf-8', sep=',', float_format='%.4f')
 
 pdb.set_trace()

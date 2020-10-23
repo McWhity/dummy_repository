@@ -55,6 +55,9 @@ def insitu(path,path_SM,fields,esus,save_path):
             df_add = df_reindexed.filter(like='Water content total kg/m2 HANTS')
             df_add = df_add.filter(like=key)
             df_new = df_new.append(df_add)
+            df_add = df_reindexed.filter(like='Water content total [%]')
+            df_add = df_add.filter(like=key)
+            df_new = df_new.append(df_add)
 
             df_SM2 = df_SM2.append(df_SM)
 
@@ -64,12 +67,14 @@ def insitu(path,path_SM,fields,esus,save_path):
         df_new = df_new.append(df_add)
         df_add = df_reindexed.filter(like='Water content total kg/m2 mean HANTS')
         df_new = df_new.append(df_add)
+        df_add = df_reindexed.filter(like='Water content total [%]')
+        df_new = df_new.append(df_add)
 
     df_new = df_new.append(df_SM2)
     df_insitu = df_new.groupby(df_new.index).mean()
 
     save_path = '/media/tweiss/Work/z_final_mni_data_2017'
-    df_insitu.to_csv(os.path.join(save_path, 'mni_in_situ.csv'), encoding='utf-8', sep=',', float_format='%.4f')
+    df_insitu.to_csv(os.path.join(save_path, 'mni_in_situ_neu.csv'), encoding='utf-8', sep=',', float_format='%.4f')
 
     return df_insitu
 
