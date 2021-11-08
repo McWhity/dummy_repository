@@ -66,45 +66,24 @@ def insitu(path,path_SM,fields,esus,save_path):
             else:
                 df_SM[field + ' ' + key,'SM 5cm'] = data_SM[['Port1_SM', 'Port2_SM']].mean(axis=1)
 
-            df_add = df_reindexed.filter(like='Dry biomass total kg/m2')
-            df_add = df_add.filter(like=key)
-            df_new = df_new.append(df_add)
-            df_add = df_reindexed.filter(like='Wet biomass total kg/m2')
-            df_add = df_add.filter(like=key)
-            df_new = df_new.append(df_add)
-
             df_add = df_reindexed.filter(like='LAI HANTS')
             df_add = df_add.filter(like=key)
             df_new = df_new.append(df_add)
-            df_add = df_reindexed.filter(like='Height mean')
+            df_add = df_reindexed.filter(like='Height [cm]')
             df_add = df_add.filter(like=key)
             df_new = df_new.append(df_add)
-            df_add = df_reindexed.filter(like='Water content total kg/m2')
-            df_add = df_add.filter(like=key)
-            df_new = df_new.append(df_add)
-            df_add = df_reindexed.filter(like='Water content sample total [%]')
+            df_add = df_reindexed.filter(like='Water content total kg/m2 HANTS')
             df_add = df_add.filter(like=key)
             df_new = df_new.append(df_add)
 
             df_SM2 = df_SM2.append(df_SM)
 
-
-
-        # df_add = df_reindexed.filter(like='LAI mean HANTS')
-        # df_new = df_new.append(df_add)
-        # df_add = df_reindexed.filter(like='Height [cm] mean')
-        # df_new = df_new.append(df_add)
+        df_add = df_reindexed.filter(like='LAI mean HANTS')
+        df_new = df_new.append(df_add)
+        df_add = df_reindexed.filter(like='Height mean')
+        df_new = df_new.append(df_add)
         # df_add = df_reindexed.filter(like='Water content total kg/m2 mean HANTS')
         # df_new = df_new.append(df_add)
-        # df_add = df_reindexed.filter(like='Water content total [%]')
-        # df_new = df_new.append(df_add)
-        # df_add = df_reindexed.filter(like='Dry biomass total kg/m2 mean HANTS')
-        # df_add = df_add.filter(like=key)
-        # df_new = df_new.append(df_add)
-        # df_add = df_reindexed.filter(like='Wet biomass total kg/m2 mean HANTS')
-        # df_add = df_add.filter(like=key)
-        # df_new = df_new.append(df_add)
-
 
     df_new = df_new.append(df_SM2)
     df_insitu = df_new.groupby(df_new.index).mean()
@@ -113,7 +92,6 @@ def insitu(path,path_SM,fields,esus,save_path):
     df_insitu.to_csv(os.path.join(save_path, 'mni_in_situ_2018.csv'), encoding='utf-8', sep=',', float_format='%.4f')
 
     return df_insitu
-
 
 # LAI path
 path = '/media/nas_data/2018_MNI_campaign/field_data/field_measurements/vegetation/revised/csv'
@@ -133,3 +111,5 @@ esus = ['high', 'low', 'med']
 save_path = '/media/tweiss/Work/z_final_mni_data_2017'
 
 df_insitu = insitu(path,path_SM,fields,esus,save_path)
+
+

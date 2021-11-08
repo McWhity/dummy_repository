@@ -25,7 +25,7 @@ def insitu(path,path_SM,fields,esus,save_path):
             name_SM = {'high': 'Philip4_07Jun17_04Sep17_SM.csv', 'low': 'Philip5_07Jun17_04Sep17_SM.csv', 'med': 'Philip6_07Jun17_04Sep17_SM.csv'}
         if field == '515':
             name_SM = {'high': 'Philip1_07Jun17_22Sep17_SM.csv', 'low': 'Philip2_07Jun17_22Sep17_SM.csv', 'med': 'Philip3_07Jun17_22Sep17_SM.csv'}
-
+        # pdb.set_trace()
         df = pd.io.parsers.read_csv(os.path.join(path, field + '.csv'), header=[0, 1], sep=';')
         df = df.set_index(pd.to_datetime(df['None']['None']))
         df_reindexed = df.reindex(pd.date_range(start=df.index.min(), end=df.index.max(), freq='10Min')).interpolate(kind='cubic', axis=0)
@@ -45,6 +45,13 @@ def insitu(path,path_SM,fields,esus,save_path):
 
             else:
                 df_SM[field + ' ' + key,'SM 5cm'] = data_SM[['Port1_SM', 'Port2_SM']].mean(axis=1)
+
+            df_add = df_reindexed.filter(like='Dry biomass total kg/m2 HANTS')
+            df_add = df_add.filter(like=key)
+            df_new = df_new.append(df_add)
+            df_add = df_reindexed.filter(like='Wet biomass total kg/m2 HANTS')
+            df_add = df_add.filter(like=key)
+            df_new = df_new.append(df_add)
 
             df_add = df_reindexed.filter(like='LAI HANTS')
             df_add = df_add.filter(like=key)
@@ -69,12 +76,19 @@ def insitu(path,path_SM,fields,esus,save_path):
         df_new = df_new.append(df_add)
         df_add = df_reindexed.filter(like='Water content total [%]')
         df_new = df_new.append(df_add)
+        df_add = df_reindexed.filter(like='Dry biomass total kg/m2 mean HANTS')
+        df_add = df_add.filter(like=key)
+        df_new = df_new.append(df_add)
+        df_add = df_reindexed.filter(like='Wet biomass total kg/m2 mean HANTS')
+        df_add = df_add.filter(like=key)
+        df_new = df_new.append(df_add)
+
 
     df_new = df_new.append(df_SM2)
     df_insitu = df_new.groupby(df_new.index).mean()
 
     save_path = '/media/tweiss/Work/z_final_mni_data_2017'
-    df_insitu.to_csv(os.path.join(save_path, 'mni_in_situ_neu.csv'), encoding='utf-8', sep=',', float_format='%.4f')
+    df_insitu.to_csv(os.path.join(save_path, 'mni_in_situ_2017.csv'), encoding='utf-8', sep=',', float_format='%.4f')
 
     return df_insitu
 

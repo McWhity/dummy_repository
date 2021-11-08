@@ -39,6 +39,7 @@ df_LAI = insitu(path,path_SM,fields,esus,save_path)
 # pixels = '_buffer_100'
 # pixels = ''
 pixel = ['','_buffer_30','_buffer_50','_buffer_100']
+pixel = ['_buffer_100']
 
 for pixels in pixel:
 
@@ -51,6 +52,7 @@ for pixels in pixel:
     path_data = '/media/nas_data/Thomas/S1/processed/MNI_2018_new_final/step3'
 
     processed_sentinel_data = 'multi'
+    # processed_sentinel_data = 'single'
 
     df_output = pd.DataFrame(columns=pd.MultiIndex(levels=[[],[]], codes=[[],[]]))
 
@@ -103,6 +105,8 @@ for pixels in pixel:
             orbitdirection = []
             satellite = []
             dates = []
+            drybiomass = []
+            wetbiomass = []
 
             for i, tim in enumerate(sorted(sentinel1_observations.dates)):
                 if tim < datetime.datetime(2018, 1, 25) or tim > datetime.datetime(2018, 10, 20):
@@ -125,6 +129,10 @@ for pixels in pixel:
                             LAI2.append(df_add2.filter(like='LAI mean HANTS').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
                             Height2.append(df_add2.filter(like='Height mean').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
                             # VWC2.append(df_add2.filter(like='Water content total kg/m2 mean HANTS').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
+
+                            drybiomass.append(df_add.filter(like='Dry biomass total kg/m2 HANTS').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
+                            wetbiomass.append(df_add.filter(like='Wet biomass total kg/m2 HANTS').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
+
                             print(tim)
                             observations = data.observations*1.
                             observations_vh = data_vh.observations*1.
@@ -166,6 +174,8 @@ for pixels in pixel:
             df_output[field + '_' + esu, 'Height'] = Height
             # df_output[field + '_' + esu, 'VWC'] = VWC
             df_output[field + '_' + esu, 'vh/vv'] = np.array(sigma_sentinel_vh) / np.array(sigma_sentinel_vv)
+                            df_output[field + '_' + esu, 'drybiomass'] = drybiomass
+                df_output[field + '_' + esu, 'wetbiomass'] = wetbiomass
         df_output[field + '_mean', 'date'] = dates
         df_output[field + '_mean', 'LAI'] = LAI2
         df_output[field + '_mean', 'Height'] = Height2

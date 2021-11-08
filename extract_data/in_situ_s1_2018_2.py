@@ -10,24 +10,22 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import datetime
 import xarray
-from mni_in_situ_2017 import insitu
+from mni_in_situ_2018 import insitu
 import pdb
 
 ### Gathering of in-situ measurements (soil moisture, LAI, height, VWC) within Panda dataframe
 #------------------------------------------------------------------------------
 # LAI path
-path = '/media/nas_data/2017_MNI_campaign/field_data/field_measurements/vegetation/revised/csv'
+path = '/media/nas_data/2018_MNI_campaign/field_data/field_measurements/vegetation/revised/csv'
 
 # SM path
-path_SM = '/media/nas_data/2017_MNI_campaign/field_data/field_measurements/soil_moisture/data_revised'
+path_SM = '/media/nas_data/2018_MNI_campaign/field_data/field_measurements/soil_moisture/data_revised'
 
 # field names
-fields = ['301', '508', '542', '319', '515']
-# fields = ['508']
+fields = ['317', '410', '508', '525']
+# fields = ['317']
+fields = ['317', '525']
 # ESU names
-esus = ['high', 'low', 'med', 'mean']
-# esus = ['mean']
-
 esus = ['high', 'low', 'med']
 
 # Save output path
@@ -38,8 +36,9 @@ df_LAI = insitu(path,path_SM,fields,esus,save_path)
 pixel = ['_Field_buffer_30','','_buffer_30','_buffer_50','_buffer_100']
 # pixel = ['_Field_buffer_30']
 pixel = ['_buffer_50']
+#### field buffer has to be rewritten (version of 2017!!!)
 pixel = ['_Field_buffer_30','_buffer_100']
-
+pixel = ['_buffer_100']
 
 processed_sentinel = ['multi','norm_multi']
 # processed_sentinel = ['norm_multi']
@@ -48,18 +47,21 @@ processed_sentinel = ['multi']
 for processed_sentinel_data in processed_sentinel:
 
     for pixels in pixel:
+
         print(pixels)
         path_ESU = '/media/tweiss/Work/z_final_mni_data_2017/'
-        name_shp = 'ESU'+pixels+'.shp'
-        name_ESU = 'ESU'+pixels+'.tif'
+        name_shp = 'ESU_2018'+pixels+'.shp'
+        name_ESU = 'ESU_2018'+pixels+'.tif'
 
         if pixels == '_Field_buffer_30':
-            subprocess.call('gdal_rasterize -at -of GTiff -a ID -te 697100 5347200 703600 5354600 -tr 10 10 -ot Byte -co \"COMPRESS=DEFLATE\" '+path_ESU+name_shp+' '+path_ESU+name_ESU, shell=True)
+            subprocess.call('gdal_rasterize -at -of GTiff -a ID -te 694748 5345900 703600 5354600 -tr 10 10 -ot Byte -co \"COMPRESS=DEFLATE\" '+path_ESU+name_shp+' '+path_ESU+name_ESU, shell=True)
         else:
-            subprocess.call('gdal_rasterize -at -of GTiff -a FID_ -te 697100 5347200 703600 5354600 -tr 10 10 -ot Byte -co \"COMPRESS=DEFLATE\" '+path_ESU+name_shp+' '+path_ESU+name_ESU, shell=True)
+            subprocess.call('gdal_rasterize -at -of GTiff -a ID -te 694748 5345900 703600 5354600 -tr 10 10 -ot Byte -co \"COMPRESS=DEFLATE\" '+path_ESU+name_shp+' '+path_ESU+name_ESU, shell=True)
 
-        path_data = '/media/nas_data/Thomas/S1/processed/MNI_2017_new_final/step3'
+        path_data = '/media/nas_data/Thomas/S1/processed/MNI_2018_new_final/step3'
         # path_data = '/media/nas_data/Thomas/S1/processed/MNI_2017_new_final/pol_decomp'
+        processed_sentinel_data = 'multi'
+        # processed_sentinel_data = 'single'
 
         df_output = pd.DataFrame(columns=pd.MultiIndex(levels=[[],[]], codes=[[],[]]))
 
@@ -72,6 +74,7 @@ for processed_sentinel_data in processed_sentinel:
                 state_mask = g.ReadAsArray().astype(np.int)
 
                 if pixels == '_Field_buffer_30':
+                    #### has to be rewritten old version of 2017
                     if field == '515':
                         mask_value = 4
                         state_mask = state_mask==mask_value
@@ -88,66 +91,44 @@ for processed_sentinel_data in processed_sentinel:
                         mask_value = 87
                         state_mask = state_mask==mask_value
                 else:
-                    if field == '515' and esu == 'high':
-                        mask_value = 1
-                        state_mask = state_mask==mask_value
-                    elif field == '515' and esu == 'med':
-                        mask_value = 2
-                        state_mask = state_mask==mask_value
-                    elif field == '515' and esu == 'low':
-                        mask_value = 3
-                        state_mask = state_mask==mask_value
-                    elif field == '508' and esu == 'high':
+                    if field == '317' and esu == 'high':
                         mask_value = 4
-                        state_mask = state_mask==mask_value
-                    elif field == '508' and esu == 'med':
-                        mask_value = 5
-                        state_mask = state_mask==mask_value
-                    elif field == '508' and esu == 'low':
+                    elif field == '317' and esu == 'med':
                         mask_value = 6
-                        state_mask = state_mask==mask_value
-                    elif field == '542' and esu == 'high':
+                    elif field == '317' and esu == 'low':
+                        mask_value = 5
+                    elif field == '410' and esu == 'high':
                         mask_value = 7
-                        state_mask = state_mask==mask_value
-                    elif field == '542' and esu == 'med':
-                        mask_value = 8
-                        state_mask = state_mask==mask_value
-                    elif field == '542' and esu == 'low':
+                    elif field == '410' and esu == 'med':
                         mask_value = 9
-                        state_mask = state_mask==mask_value
-                    elif field == '319' and esu == 'high':
+                    elif field == '410' and esu == 'low':
+                        mask_value = 8
+                    elif field == '508' and esu == 'high':
                         mask_value = 10
-                        state_mask = state_mask==mask_value
-                    elif field == '319' and esu == 'med':
-                        mask_value = 11
-                        state_mask = state_mask==mask_value
-                    elif field == '319' and esu == 'low':
+                    elif field == '508' and esu == 'med':
                         mask_value = 12
-                        state_mask = state_mask==mask_value
-                    elif field == '301' and esu == 'high':
+                    elif field == '508' and esu == 'low':
+                        mask_value = 11
+                    elif field == '525' and esu == 'high':
                         mask_value = 13
-                        state_mask = state_mask==mask_value
-                    elif field == '301' and esu == 'med':
-                        mask_value = 14
-                        state_mask = state_mask==mask_value
-                    elif field == '301' and esu == 'low':
+                    elif field == '525' and esu == 'med':
                         mask_value = 15
-                        state_mask = state_mask==mask_value
-                    elif field == '515' and esu == 'mean':
-                        m = np.ma.array(state_mask,mask=((state_mask==1) | (state_mask==2) | (state_mask==3)))
-                        state_mask = m.mask
-                    elif field == '508' and esu == 'mean':
-                        m = np.ma.array(state_mask,mask=((state_mask==4) | (state_mask==5) | (state_mask==6)))
-                        state_mask = m.mask
-                    elif field == '542' and esu == 'mean':
-                        m = np.ma.array(state_mask,mask=((state_mask==7) | (state_mask==8) | (state_mask==9)))
-                        state_mask = m.mask
-                    elif field == '319' and esu == 'mean':
-                        m = np.ma.array(state_mask,mask=((state_mask==10) | (state_mask==11) | (state_mask==12)))
-                        state_mask = m.mask
-                    elif field == '301' and esu == 'mean':
-                        m = np.ma.array(state_mask,mask=((state_mask==13) | (state_mask==14) | (state_mask==15)))
-                        state_mask = m.mask
+                    elif field == '525' and esu == 'low':
+                        mask_value = 14
+                    # elif field == '317' and esu == 'mean':
+                    #     m = np.ma.array(state_mask,mask=((state_mask==4) | (state_mask==5) | (state_mask==6)))
+                    #     state_mask = m.mask
+                    # elif field == '410' and esu == 'mean':
+                    #     m = np.ma.array(state_mask,mask=((state_mask==7) | (state_mask==8) | (state_mask==9)))
+                    #     state_mask = m.mask
+                    # elif field == '508' and esu == 'mean':
+                    #     m = np.ma.array(state_mask,mask=((state_mask==10) | (state_mask==11) | (state_mask==12)))
+                    #     state_mask = m.mask
+                    # elif field == '525' and esu == 'mean':
+                    #     m = np.ma.array(state_mask,mask=((state_mask==13) | (state_mask==14) | (state_mask==15)))
+                    #     state_mask = m.mask
+
+                state_mask = state_mask==mask_value
 
                 SM = []
                 LAI = []
@@ -169,10 +150,11 @@ for processed_sentinel_data in processed_sentinel:
                 wetbiomass = []
 
                 for i, tim in enumerate(sorted(sentinel1_observations.dates)):
-                    if tim < datetime.datetime(2017, 1, 25) or tim > datetime.datetime(2017, 10, 20):
+                    if tim < datetime.datetime(2018, 1, 25) or tim > datetime.datetime(2018, 10, 20):
                         pass
                     else:
                         if tim >= df_LAI.index.min() and tim <= df_LAI.index.max():
+                            print(tim)
                             try:
 
                                 data = sentinel1_observations.get_band_data(tim, 'vv_' + processed_sentinel_data)
@@ -192,11 +174,12 @@ for processed_sentinel_data in processed_sentinel:
                                     df_add = df_LAI.filter(like=field).filter(like=esu)
                                     LAI.append(df_add.filter(like='LAI HANTS').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
                                     SM.append(df_add.filter(like='SM 5cm').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
-                                    Height.append(df_add.filter(like='Height [cm]').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
-                                    VWC.append(df_add.filter(like='Water content total kg/m2 HANTS').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
-                                    VWC_pro.append(df_add.filter(like='Water content total [%]').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
-                                    drybiomass.append(df_add.filter(like='Dry biomass total kg/m2 HANTS').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
-                                    wetbiomass.append(df_add.filter(like='Wet biomass total kg/m2 HANTS').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
+                                    Height.append(df_add.filter(like='Height mean').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
+                                    VWC.append(df_add.filter(like='Water content total kg/m2').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
+                                    VWC_pro.append(df_add.filter(like='Water content sample total [%]').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
+                                    drybiomass.append(df_add.filter(like='Dry biomass total kg/m2').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
+                                    wetbiomass.append(df_add.filter(like='Wet biomass total kg/m2').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
+
 
                                 print(tim)
 
@@ -261,6 +244,6 @@ for processed_sentinel_data in processed_sentinel:
             # theta_mean = df_output.filter(like=field).filter(like='theta').mean(axis=1)
             # df_output[field + '_mean', 'theta'] = theta_mean
 
-        df_output.to_csv(os.path.join(save_path, 'new_in_situ_s1'+processed_sentinel_data+pixels+'_2017_paper3.csv'), encoding='utf-8', sep=',', float_format='%.4f')
+        df_output.to_csv(os.path.join(save_path, 'new_in_situ_s1'+processed_sentinel_data+pixels+'_2018_paper3.csv'), encoding='utf-8', sep=',', float_format='%.4f')
 
 pdb.set_trace()
