@@ -98,15 +98,15 @@ def main():
 
             # plt.ylim(0.1,0.4)
             df = pd.DataFrame(index = yyy[mask])
-            df['sm301high'] = sm301high.api[mask]/100
-            df['sm301low'] = sm301low.api[mask]/100
-            df['sm301med'] = sm301med.api[mask]/100
-            df['sm508high'] = sm508high.api[mask]/100
-            df['sm508low'] = sm508low.api[mask]/100
-            df['sm508med'] = sm508med.api[mask]/100
-            df['sm542high'] = sm542high.api[mask]/100
-            df['sm542low'] = sm542low.api[mask]/100
-            df['sm542med'] = sm542med.api[mask]/100
+            df['sm301_high'] = sm301high.api[mask]/100
+            df['sm301_low'] = sm301low.api[mask]/100
+            df['sm301_med'] = sm301med.api[mask]/100
+            df['sm508_high'] = sm508high.api[mask]/100
+            df['sm508_low'] = sm508low.api[mask]/100
+            df['sm508_med'] = sm508med.api[mask]/100
+            df['sm542_high'] = sm542high.api[mask]/100
+            df['sm542_low'] = sm542low.api[mask]/100
+            df['sm542_med'] = sm542med.api[mask]/100
             # df = pd.DataFrame(data = test.api[mask]/100,index = yyy[mask], columns=['sm'])
             df.to_csv('/media/tweiss/Daten/data_AGU/api'+year+'_radolan.csv')
 
@@ -121,8 +121,8 @@ def main():
 
 
             yyy = pd.to_datetime(sm317high.time.time.values)
-            xxx = datetime.datetime.strptime('2017-03-20', '%Y-%m-%d')
-            zzz = datetime.datetime.strptime('2017-07-30', '%Y-%m-%d')
+            xxx = datetime.datetime.strptime('2018-03-20', '%Y-%m-%d')
+            zzz = datetime.datetime.strptime('2018-07-30', '%Y-%m-%d')
 
             mask = (yyy > xxx) & (yyy < zzz)
             # plt.plot(yyy[mask],test.api[mask]/100)
@@ -130,12 +130,12 @@ def main():
 
             # plt.ylim(0.1,0.4)
             df = pd.DataFrame(index = yyy[mask])
-            df['sm317high'] = sm317high.api[mask]/100
-            df['sm317low'] = sm317low.api[mask]/100
-            df['sm317med'] = sm317med.api[mask]/100
-            df['sm525high'] = sm525high.api[mask]/100
-            df['sm525low'] = sm525low.api[mask]/100
-            df['sm525med'] = sm525med.api[mask]/100
+            df['sm317_high'] = sm317high.api[mask]/100
+            df['sm317_low'] = sm317low.api[mask]/100
+            df['sm317_med'] = sm317med.api[mask]/100
+            df['sm525_high'] = sm525high.api[mask]/100
+            df['sm525_low'] = sm525low.api[mask]/100
+            df['sm525_med'] = sm525med.api[mask]/100
 
             # df = pd.DataFrame(data = test.api[mask]/100,index = yyy[mask], columns=['sm'])
             df.to_csv('/media/tweiss/Daten/data_AGU/api'+year+'_radolan.csv')

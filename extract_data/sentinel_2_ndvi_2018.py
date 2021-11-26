@@ -245,7 +245,7 @@ for vers in ver:
             #     plt.close()
 
 
-esus = ['high', 'low', 'med']
+
 
 pixel = ['_buffer_100']
 
@@ -256,8 +256,10 @@ for vers in ver:
             print(pixels)
             if years == '_2017':
                 fields = ['301', '508', '542']
+                esus = ['high', 'low', 'med']
             elif years == '_2018':
                 fields = ['317', '525']
+                esus = ['high', 'low', 'med']
             elif years == '_2016':
                 fields = ['100', '300']
                 esus = ['high', 'low']
