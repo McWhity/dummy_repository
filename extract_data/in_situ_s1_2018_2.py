@@ -24,7 +24,7 @@ path_SM = '/media/nas_data/2018_MNI_campaign/field_data/field_measurements/soil_
 # field names
 fields = ['317', '410', '508', '525']
 # fields = ['317']
-fields = ['317', '525']
+# fields = ['508']
 # ESU names
 esus = ['high', 'low', 'med']
 
@@ -180,7 +180,7 @@ for processed_sentinel_data in processed_sentinel:
                                     drybiomass.append(df_add.filter(like='Dry biomass total kg/m2').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
                                     wetbiomass.append(df_add.filter(like='Wet biomass total kg/m2').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
 
-
+                                pdb.set_trace()
                                 print(tim)
 
                                 observations = data.observations*1.
