@@ -203,8 +203,6 @@ for vers in ver:
 
             if pixels == '_Field_buffer_30':
 
-                state_mask[state_mask==4] = 0
-                state_mask[state_mask==67] = 0
                 state_mask[state_mask>0] = 1
 
             files = glob.glob(os.path.join(path_data,'*.nc'))
@@ -255,10 +253,10 @@ for vers in ver:
         for years in year:
             print(pixels)
             if years == '_2017':
-                fields = ['301', '508', '542']
+                fields = ['301', '508', '542', '515', '319']
                 esus = ['high', 'low', 'med']
             elif years == '_2018':
-                fields = ['317', '525']
+                fields = ['317', '525', '410', '508']
                 esus = ['high', 'low', 'med']
             elif years == '_2016':
                 fields = ['100', '300']
