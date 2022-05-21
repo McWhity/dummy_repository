@@ -8,7 +8,7 @@ import gdal
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import datetime
+
 import xarray
 from mni_in_situ_2018 import insitu
 import pdb
@@ -180,7 +180,7 @@ for processed_sentinel_data in processed_sentinel:
                                     drybiomass.append(df_add.filter(like='Dry biomass total kg/m2').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
                                     wetbiomass.append(df_add.filter(like='Wet biomass total kg/m2').loc[tim.strftime("%Y-%m-%d %H:00:00")].values[0])
 
-                                pdb.set_trace()
+                                # pdb.set_trace()
                                 print(tim)
 
                                 observations = data.observations*1.

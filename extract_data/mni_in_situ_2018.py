@@ -34,10 +34,7 @@ def insitu(path,path_SM,fields,esus,save_path):
             data_SM = data_SM.set_index('date')
             del data_SM.index.name
 
-            if name_SM[key] == 'Alex4_17May18_29Sep18_SM.csv':
-                df_SM[field + ' ' + key,'SM 5cm'] = data_SM[['Port2_SM']].mean(axis=1)[df_SM.index]
-
-            elif name_SM[key] == 'Philip1_20Apr18_13Jul18_SM.csv':
+            if name_SM[key] == 'Philip1_20Apr18_13Jul18_SM.csv':
                 data_SM_2 = pd.read_csv(os.path.join(path_SM, 'Philip2_20Apr18_13Jul18_SM.csv'))
                 data_SM_2['date'] = data_SM_2['date'] = pd.to_datetime(data_SM_2['date'])
                 data_SM_2 = data_SM_2.set_index('date')
