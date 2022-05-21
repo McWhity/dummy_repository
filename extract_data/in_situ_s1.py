@@ -261,6 +261,6 @@ for processed_sentinel_data in processed_sentinel:
             # theta_mean = df_output.filter(like=field).filter(like='theta').mean(axis=1)
             # df_output[field + '_mean', 'theta'] = theta_mean
 
-        df_output.to_csv(os.path.join(save_path, 'new_in_situ_s1'+processed_sentinel_data+pixels+'_2017_paper3.csv'), encoding='utf-8', sep=',', float_format='%.4f')
+        df_output.to_csv(os.path.join(save_path, 'new_in_situ_s1'+processed_sentinel_data+pixels+'_2017_paper3_2.csv'), encoding='utf-8', sep=',', float_format='%.4f')
 
 pdb.set_trace()

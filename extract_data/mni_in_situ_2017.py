@@ -43,6 +43,14 @@ def insitu(path,path_SM,fields,esus,save_path):
             elif name_SM[key] == 'Philip6_07Jun17_04Sep17_SM.csv':
                 df_SM[field + ' ' + key,'SM 5cm'] = data_SM[['Port1_SM']].mean(axis=1)[df_SM.index]
 
+            elif name_SM[key] == 'Philip1_07Jun17_22Sep17_SM.csv':
+                df_SM[field + ' ' + key,'SM 5cm'] = data_SM[['Port2_SM']].mean(axis=1)[df_SM.index]
+
+            elif name_SM[key] == 'Philip2_07Jun17_22Sep17_SM.csv':
+                df_SM[field + ' ' + key,'SM 5cm'] = data_SM[['Port4_SM']].mean(axis=1)[df_SM.index]
+
+            elif name_SM[key] == 'Philip3_07Jun17_22Sep17_SM.csv':
+                df_SM[field + ' ' + key,'SM 5cm'] = data_SM[['Port1_SM', 'Port2_SM', 'Port3_SM']].mean(axis=1)
             else:
                 df_SM[field + ' ' + key,'SM 5cm'] = data_SM[['Port1_SM', 'Port2_SM']].mean(axis=1)
 
