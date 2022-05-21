@@ -13,6 +13,8 @@ import xarray
 from mni_in_situ_2017 import insitu
 import pdb
 
+### Usage: extract insitu-measurements and Sentinel-1 backscatter data into csv file for the year 2017 (need file mni_in_situ_2017.py)
+
 ### Gathering of in-situ measurements (soil moisture, LAI, height, VWC) within Panda dataframe
 #------------------------------------------------------------------------------
 # LAI path
