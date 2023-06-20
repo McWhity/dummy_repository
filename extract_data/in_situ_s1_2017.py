@@ -25,13 +25,13 @@ path_SM = '/media/nas_data/2017_MNI_campaign/field_data/field_measurements/soil_
 
 # field names
 fields = ['301', '508', '542', '319', '515']
-# fields = ['515']
+fields = ['515']
 # ESU names
 esus = ['high', 'low', 'med', 'mean']
 # esus = ['mean']
 
 esus = ['high', 'low', 'med']
-# esus = ['high', 'low']
+esus = ['high', 'low']
 
 # Save output path
 save_path = '/media/tweiss/Work/z_final_mni_data_2017'
@@ -264,6 +264,6 @@ for processed_sentinel_data in processed_sentinel:
             # theta_mean = df_output.filter(like=field).filter(like='theta').mean(axis=1)
             # df_output[field + '_mean', 'theta'] = theta_mean
 
-        df_output.to_csv(os.path.join(save_path, 'new_in_situ_s1'+processed_sentinel_data+pixels+'_2017_paper3.csv'), encoding='utf-8', sep=',', float_format='%.4f')
+        df_output.to_csv(os.path.join(save_path, 'new_in_situ_s1'+processed_sentinel_data+pixels+'_2017_paper3_2.csv'), encoding='utf-8', sep=',', float_format='%.4f')
 
 pdb.set_trace()
